@@ -6,4 +6,4 @@ Created on Sep 7, 2018
 
 class Agent(object):
     
-    
+    print("nice")
