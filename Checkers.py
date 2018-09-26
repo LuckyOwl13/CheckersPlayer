@@ -5,7 +5,7 @@ Created on Sep 7, 2018
 '''
 from distutils.command.check import check
 
-class Board(object):
+class Checkers(object):
     '''
     classdocs
     '''
