@@ -1,5 +1,5 @@
 '''
-Created on Sep 7, 2018
+Created on Sep 26, 2018
 
 @author: Caitlin ☼
 '''
@@ -26,10 +26,10 @@ class Agent(object):
     # The way I will approach this with recursion bc I can't be stopped.
     #    Base Case: Depth = 1
     #    
-    def ABTreeSearch(self,board,turn,depth):
+    def ABTreeSearch(self,board,player,depth):
         moveSet = []
         
-        for state in self.movesAvailable(state):
+        for state in self.movesAvailable(state,player):
             print("nice")
             
             
@@ -51,16 +51,27 @@ class Agent(object):
     def movesAvailable(self, state, player):
         moveSet = []
         
-        for i in range(0,len(state)):
-            for j in range (0,len(state[i])):
-                if state[i][j] == player:
-                    if 
+        for i in range(0,len(state)):           # for all vertical bars
+            for j in range (0,len(state[i])):   # for all horizontal spaces in given vertical bar
+                if state[i][j] == player:       # if current space is the player's piece, check the following
+                    if Checkers.checkValidMove(state, player, [i,j,i-1,j-1], False): # hop UL
+                        moveSet += [[i,j,i-1,j-1]]
+                    if Checkers.checkValidMove(state, player, [i,j,i-1,j+1], False): # hop UR
+                        moveSet += [[i,j,i-1,j+1]]
+                    if Checkers.checkValidMove(state, player, [i,j,i+1,j-1], False): # hop DL
+                        moveSet += [[i,j,i+1,j-1]]
+                    if Checkers.checkValidMove(state, player, [i,j,i+1,j+1], False): # hop DR
+                        moveSet += [[i,j,i+1,j+1]]
+                    if Checkers.checkValidMove(state, player, [i,j,i-2,j-2], False): # jump UL
+                        moveSet += [[i,j,i-2,j-2]]
+                    if Checkers.checkValidMove(state, player, [i,j,i-2,j+2], False): # jump UR
+                        moveSet += [[i,j,i-2,j+2]]
+                    if Checkers.checkValidMove(state, player, [i,j,i+2,j-2], False): # jump DL
+                        moveSet += [[i,j,i+2,j-2]]
+                    if Checkers.checkValidMove(state, player, [i,j,i+2,j+2], False): # jump DR
+                        moveSet += [[i,j,i+2,j+2]]
         
-        
-        
-        
-        
-        return [state]
+        return moveSet
     #e end movesAvailable
     
     
