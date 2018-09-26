@@ -5,6 +5,7 @@ Created on Sep 26, 2018
 '''
 
 from Checkers import Checkers
+from test.test_typechecks import Integer
 
 class Agent(object):
     
@@ -26,16 +27,20 @@ class Agent(object):
     # The way I will approach this with recursion bc I can't be stopped.
     #    Base Case: Depth = 1
     #    
-    def ABTreeSearch(self,board,player,depth):
-        moveSet = []
-        
-        for state in self.movesAvailable(state,player):
-            print("nice")
+    
+    
+    # board: the given board state
+    # player: whose turn we're checking for
+    # depth: remaining evals down to check. Used for establishing base-case
+    def ABTreeSearch(self,board,player,depth,Integer.MIN):
+        for move in self.movesAvailable(board,player):
+            [simulate board state on if that move were made];
+            ABTreeSearch(self,[simulated board],player*(-1),depth-1)
             
             
         
         if depth > 1: # if this is not the base-case, run below recursion first
-            moveSet = self.ABTreeSearch(board, turn, depth - 1)
+            moveSet = self.ABTreeSearch(board, player, depth - 1)
         # end if
         
         

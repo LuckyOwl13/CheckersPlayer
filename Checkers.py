@@ -28,14 +28,14 @@ class Checkers(object):
         self.turn = -1
     # end init
         
-    def printBoard(self):
+    def printBoard(self,board):
         print("The current board is:")
         print("\t | 0 1 2 3 4 5 6 7")
         print("\t------------------")
-        for i in range(0,len(self.board)):
+        for i in range(0,len(board)):
             printString = ("\t%i| " % i)
-            for j in range (0,len(self.board[i])):
-                space = self.board[i][j]
+            for j in range (0,len(board[i])):
+                space = board[i][j]
                 if isinstance(space, int):
                     if space == -1: letter = 'R'
                     elif space == 0: letter = '-'
@@ -54,24 +54,26 @@ class Checkers(object):
         else: return 'B'
     # end whoseTurn
     
-    def movePiece(self, isJump):
+    def movePiece(self, board, turn, isJump):
         move = [int(s) for s in input("What is your move? ").split(' ')]
         print("move: %s" % move)        
-        moveCheck = self.checkValidMove(self.board,self.turn,move, isJump)
+        moveCheck = self.checkValidMove(board, turn, move, isJump)
 
         if moveCheck[0]:    # if the move is valid 
-            self.board[move[2]][move[3]] = self.board[move[0]][move[1]] # copy piece into the new position ...
-            self.board[move[0]][move[1]] = 0                            # and take piece out of old spot
-            if moveCheck[1]: self.board [move[0]+(move[2]-move[0])//2]\
+            board[move[2]][move[3]] = board[move[0]][move[1]] # copy piece into the new position ...
+            board[move[0]][move[1]] = 0                            # and take piece out of old spot
+            if moveCheck[1]: board [move[0]+(move[2]-move[0])//2]\
                                         [move[1]+(move[3]-move[1])//2] = 0   # if it was a jump, remove jumped piece
             if moveCheck[2]: 
                 print("You can make another move ! ")
-                self.printBoard()
-                self.movePiece(moveCheck[2])
+                self.printBoard(board)
+                self.movePiece(board, turn, moveCheck[2])
         else: 
-            self.movePiece(False)   # if given a bad move, retry recursively
+            self.movePiece(board, turn, False)   # if given a bad move, retry recursively
 #           self.nextTurn() # change to next turn
     # end movePiece
+    
+    
     # checks if the given move is valid to do
     # move -> the potential move
     # isJump -> if this move is right after a jump. If so, can only jump again (no single-steps)
@@ -99,7 +101,7 @@ class Checkers(object):
                       (board[move[2]][move[3]] == 0)):    # elif the piece is jumping another piece (moving forward)
                     # print("two hops this time !")
                     
-                    if (self.checkMoreJumps([move[2], move[3], board[move[0]][move[1]]])[0]): # if there are more jumps possible
+                    if (self.checkMoreJumps(board,[move[2], move[3], board[move[0]][move[1]]])[0]): # if there are more jumps possible
                         # print("Yes jumps!")
                         return True, True, True
                     else:
@@ -120,7 +122,7 @@ class Checkers(object):
                        (board[move[2]][move[3]] == 0)): # if the piece is jumping another (moving backwards)
                     # print("King power ! :D")
                     
-                    if (self.checkMoreJumps([move[2], move[3], board[move[0]][move[1]]])[0]): # if there are more jumps
+                    if (self.checkMoreJumps(board,[move[2], move[3], board[move[0]][move[1]]])[0]): # if there are more jumps
                         return True, True, True
                     else:
                         return True, True, False 
@@ -152,7 +154,7 @@ class Checkers(object):
     #     Is the piece capable of this jump (right color / king?)
     #     Is the destination spot open?
     #     Is there an enemy piece in the space between?
-    def checkMoreJumps(self,position):
+    def checkMoreJumps(self,board,position):
         #    position[ vertical location, horizontal location, piece sign
         # print(position)
         
@@ -160,23 +162,23 @@ class Checkers(object):
         # initial bounds-checking for array before it breaks
         if (position[0] > 1) & (position[1] > 1):  
             # print("UL possible")
-            jumpUL = ((self.board[position[0]-2][position[1]-2] == 0) & \
-                     ((self.board[position[0]-1][position[1]-1] == self.turn*-1) | (self.board[position[0]-1][position[1]-1] == self.turn*-1*self.king)))
+            jumpUL = ((board[position[0]-2][position[1]-2] == 0) & \
+                     ((board[position[0]-1][position[1]-1] == self.turn*-1) | (board[position[0]-1][position[1]-1] == self.turn*-1*self.king)))
         else: jumpUL = False
         if (position[0] > 1) & (position[1] < 6):  
             # print("UR possible")  
-            jumpUR = ((self.board[position[0]-2][position[1]+2] == 0) & \
-                     ((self.board[position[0]-1][position[1]+1] == self.turn*-1) | (self.board[position[0]-1][position[1]+1] == self.turn*-1*self.king)))
+            jumpUR = ((board[position[0]-2][position[1]+2] == 0) & \
+                     ((board[position[0]-1][position[1]+1] == self.turn*-1) | (board[position[0]-1][position[1]+1] == self.turn*-1*self.king)))
         else: jumpUR = False
         if (position[0] < 6) & (position[1] > 1):  
             # print("DR possible")  
-            jumpDL = ((self.board[position[0]+2][position[1]-2] == 0) & \
-                     ((self.board[position[0]+1][position[1]-1] == self.turn*-1) | (self.board[position[0]+1][position[1]-1] == self.turn*-1*self.king)))
+            jumpDL = ((board[position[0]+2][position[1]-2] == 0) & \
+                     ((board[position[0]+1][position[1]-1] == self.turn*-1) | (board[position[0]+1][position[1]-1] == self.turn*-1*self.king)))
         else: jumpDL = False
         if ((position[0] < 6) & (position[1] < 6)):  
             # print("DL possible")  
-            jumpDR = ((self.board[position[0]+2][position[1]+2] == 0) & \
-                     ((self.board[position[0]+1][position[1]+1] == self.turn*-1) | (self.board[position[0]+1][position[1]+1] == self.turn*-1*self.king)))
+            jumpDR = ((board[position[0]+2][position[1]+2] == 0) & \
+                     ((board[position[0]+1][position[1]+1] == self.turn*-1) | (board[position[0]+1][position[1]+1] == self.turn*-1*self.king)))
         else: jumpDR = False
             
         jumpYes = jumpUL | jumpUR | jumpDL | jumpDR 
@@ -201,12 +203,12 @@ class Checkers(object):
 
 checkers = Checkers()
 
-checkers.printBoard()
-checkers.movePiece(False)
+checkers.printBoard(checkers.board)
+checkers.movePiece(checkers.board,checkers.turn,False)
 
 while checkers.nextTurn():
-    checkers.printBoard()
-    checkers.movePiece(False)
+    checkers.printBoard(checkers.board)
+    checkers.movePiece(checkers.board,checkers.turn,False)
     checkers.anyKings()
 # end while
 
