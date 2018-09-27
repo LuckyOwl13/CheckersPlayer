@@ -26,18 +26,25 @@ class Agent(object):
     # 
     # The way I will approach this with recursion bc I can't be stopped.
     #    Base Case: Depth = 1
-    #    
+    #    Else Case: 
     
     
     # board: the given board state
     # player: whose turn we're checking for
-    # depth: remaining evals down to check. Used for establishing base-case
-    def ABTreeSearch(self,board,player,depth,Integer.MIN):
+    # depth: How many moves ahead being checked still. Depth=1 means one move's worth of  evals down to check. Used for establishing base-case
+    def ABTreeSearch(self,board,player,depth,currentBest=(9999*(-1)^depth)):
+        bestMove = []
         for move in self.movesAvailable(board,player):
-            [simulate board state on if that move were made];
-            ABTreeSearch(self,[simulated board],player*(-1),depth-1)
-            
-            
+            moveBoard = Checkers.movePiece(self, board[:], player, move, False)
+            moveResult = self.ABTreeSearch(self,moveBoard,player*(-1),depth-1,currentBest)
+            if (player == self.player) & (moveResult[4] > currentBest):   
+                # this move is better than previous moves and we're going for max
+                currentBest = moveResult[4]
+                bestMove = moveResult[:]
+            elif (player != self.player) & (moveResult[4] > currentBest):   
+                # this move is better than previous moves and we're going for max
+                currentBest = moveResult[4]
+                bestMove = moveResult[:]
         
         if depth > 1: # if this is not the base-case, run below recursion first
             moveSet = self.ABTreeSearch(board, player, depth - 1)
@@ -48,7 +55,7 @@ class Agent(object):
         
         
         
-        
+        return bestMove
     # end ABTreeSearch
     
     # state:  a board being considered for moves
