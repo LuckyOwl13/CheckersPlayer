@@ -56,10 +56,9 @@ class Checkers(object):
     
     def getMove(self,board,turn,isJump=False):
         move = [int(s) for s in input("What is your move? ").split(' ')]
-        self.movePiece(board, turn, move, isJump)
+        return self.movePiece(board, turn, move, isJump)
     
-    def movePiece(self, board, turn, isJump):
-        move = [int(s) for s in input("What is your move? ").split(' ')]
+    def movePiece(self, board, turn, move, isJump, human=True):
         print("move: %s" % move)        
         moveCheck = self.checkValidMove(board, turn, move, isJump)
 
@@ -72,7 +71,9 @@ class Checkers(object):
                 print("You can make another move ! ")
                 self.printBoard(board)
                 self.getMove(board, turn, moveCheck[2])
-        else: 
+        elif not human: 
+            ["complain about it"]
+        else:
             self.getMove(board, turn, False)   # if given a bad move, retry recursively
         # end else    
         return board
@@ -209,11 +210,11 @@ class Checkers(object):
 checkers = Checkers()
 
 checkers.printBoard(checkers.board)
-checkers.board = checkers.movePiece(checkers.board[:],checkers.turn,False)
+checkers.board = checkers.getMove(checkers.board[:],checkers.turn,False)
 
 while checkers.nextTurn():
     checkers.printBoard(checkers.board)
-    checkers.board = checkers.movePiece(checkers.board[:],checkers.turn,False)
+    checkers.board = checkers.getMove(checkers.board[:],checkers.turn,False)
     checkers.anyKings()
 # end while
 
