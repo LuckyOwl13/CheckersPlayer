@@ -242,19 +242,19 @@ class Checkers(object):
 
 
 
-
-checkers = Checkers()
-
-
-while checkers.nextTurn():
-    checkers.printBoard(checkers.board)
-    checkers.board = checkers.getMove(checkers.board[:],checkers.turn,False)
-    checkers.anyKings()
-    print("~~~~~~~~~~~~~~~ Next Turn")
-# end while
-
-print("Player %s cannot make any moves !" % ('B' if (checkers.turn == 1) else 'R'))
-print("Player %s wins !" % ('R' if (checkers.turn == 1) else 'B'))
+if __name__ == "__main__":
+    checkers = Checkers()
+    
+    
+    while checkers.nextTurn():
+        checkers.printBoard(checkers.board)
+        checkers.board = checkers.getMove(checkers.board[:],checkers.turn,False)
+        checkers.anyKings()
+        print("~~~~~~~~~~~~~~~ Next Turn")
+    # end while
+    
+    print("Player %s cannot make any moves !" % ('B' if (checkers.turn == 1) else 'R'))
+    print("Player %s wins !" % ('R' if (checkers.turn == 1) else 'B'))
 
 
 
