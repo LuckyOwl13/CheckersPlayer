@@ -10,7 +10,7 @@ class Checkers(object):
     classdocs
     '''
     board = []
-    turn = 0    # Is it W's (1)
+    turn = 0    # Is it R's (-1) or B's (1)?
     king = 2
     
     def __init__(self):
@@ -25,7 +25,7 @@ class Checkers(object):
                       [-1,' ',-1,' ',-1,' ',-1,' '],
                       [' ',-1,' ',-1,' ',-1,' ',-1],
                       [-1,' ',-1,' ',-1,' ',-1,' ']]
-        self.turn = -1
+        self.turn = 1
     # end init
         
     def printBoard(self,board):
@@ -245,9 +245,6 @@ class Checkers(object):
 
 checkers = Checkers()
 
-checkers.printBoard(checkers.board)
-checkers.board = checkers.getMove(checkers.board[:],checkers.turn,False)
-print("~~~~~~~~~~~~~~~ Next Turn")
 
 while checkers.nextTurn():
     checkers.printBoard(checkers.board)
