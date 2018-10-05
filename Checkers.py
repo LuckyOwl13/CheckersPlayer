@@ -17,11 +17,11 @@ class Checkers(object):
         '''
         Constructor
         '''
-        self.board = [[' ',1,' ',1,' ',1,' ',1],
-                      [1,' ',1,' ',1,' ',1,' '],
-                      [' ',1,' ',1,' ',1,' ',1],
+        self.board = [[' ',0,' ',0,' ',0,' ',0],
                       [0,' ',0,' ',0,' ',0,' '],
                       [' ',0,' ',0,' ',0,' ',0],
+                      [0,' ',0,' ',0,' ',0,' '],
+                      [' ',0,' ',0,' ',0,' ',1],
                       [-1,' ',-1,' ',-1,' ',-1,' '],
                       [' ',-1,' ',-1,' ',-1,' ',-1],
                       [-1,' ',-1,' ',-1,' ',-1,' ']]
@@ -86,6 +86,10 @@ class Checkers(object):
     # move -> the potential move
     # isJump -> if this move is right after a jump. If so, can only jump again (no single-steps)
     def checkValidMove(self,board,turn,move,isJump=False):
+#         
+#         print("Checking move %s" % move)
+#         print(turn == board[move[0]][move[1]])
+#         
         
         if ( (move[0] < len(board)) and \
              (move[0] >= 0) and \
@@ -131,6 +135,7 @@ class Checkers(object):
                     # print("King power ! :D")
                     
                     if (self.checkMoreJumps(board,[move[2], move[3], board[move[0]][move[1]]])[0]): # if there are more jumps
+                        # print("King Keeps Jumping !")
                         return True, True, True
                     else:
                         return True, True, False 
@@ -153,21 +158,21 @@ class Checkers(object):
             for j in range (0,len(board[i])):   # for all horizontal spaces in given vertical bar
                 if board[i][j] == player:       # if current space is the player's piece, check the following
                     
-                    if Checkers.checkValidMove(self, board, player, [i,j,i-1,j-1], False): # hop UL
+                    if Checkers.checkValidMove(self, board, player, [i,j,i-1,j-1], False)[0]: # hop UL
                         moveSet += [[i,j,i-1,j-1]]
-                    if Checkers.checkValidMove(self, board, player, [i,j,i-1,j+1], False): # hop UR
+                    if Checkers.checkValidMove(self, board, player, [i,j,i-1,j+1], False)[0]: # hop UR
                         moveSet += [[i,j,i-1,j+1]]
-                    if Checkers.checkValidMove(self, board, player, [i,j,i+1,j-1], False): # hop DL
+                    if Checkers.checkValidMove(self, board, player, [i,j,i+1,j-1], False)[0]: # hop DL
                         moveSet += [[i,j,i+1,j-1]]
-                    if Checkers.checkValidMove(self, board, player, [i,j,i+1,j+1], False): # hop DR
+                    if Checkers.checkValidMove(self, board, player, [i,j,i+1,j+1], False)[0]: # hop DR
                         moveSet += [[i,j,i+1,j+1]]
-                    if Checkers.checkValidMove(self, board, player, [i,j,i-2,j-2], isJump): # jump UL
+                    if Checkers.checkValidMove(self, board, player, [i,j,i-2,j-2], isJump)[0]: # jump UL
                         moveSet += [[i,j,i-2,j-2]]
-                    if Checkers.checkValidMove(self, board, player, [i,j,i-2,j+2], isJump): # jump UR
+                    if Checkers.checkValidMove(self, board, player, [i,j,i-2,j+2], isJump)[0]: # jump UR
                         moveSet += [[i,j,i-2,j+2]]
-                    if Checkers.checkValidMove(self, board, player, [i,j,i+2,j-2], isJump): # jump DL
+                    if Checkers.checkValidMove(self, board, player, [i,j,i+2,j-2], isJump)[0]: # jump DL
                         moveSet += [[i,j,i+2,j-2]]
-                    if Checkers.checkValidMove(self, board, player, [i,j,i+2,j+2], isJump): # jump DR
+                    if Checkers.checkValidMove(self, board, player, [i,j,i+2,j+2], isJump)[0]: # jump DR
                         moveSet += [[i,j,i+2,j+2]]
         
         return moveSet
@@ -175,8 +180,10 @@ class Checkers(object):
     
     
     def nextTurn(self):
-        self.turn *= -1          
-        if len(self.movesAvailable(self.board,self.turn)) > 0:
+        self.turn *= -1
+        moveSet = self.movesAvailable(self.board,self.turn)          
+        if len(moveSet) > 0:
+            print("There is a move available: %s" % moveSet[0])
             return True     # if current player has moves available, return True (game continues)
         else:
             self.printBoard(self.board)
@@ -240,14 +247,17 @@ checkers = Checkers()
 
 checkers.printBoard(checkers.board)
 checkers.board = checkers.getMove(checkers.board[:],checkers.turn,False)
+print("~~~~~~~~~~~~~~~ Next Turn")
 
 while checkers.nextTurn():
     checkers.printBoard(checkers.board)
     checkers.board = checkers.getMove(checkers.board[:],checkers.turn,False)
     checkers.anyKings()
+    print("~~~~~~~~~~~~~~~ Next Turn")
 # end while
 
-print ("Player %s wins !" % ('R' if (checkers.turn == 1) else 'B'))
+print("Player %s cannot make any moves !" % ('B' if (checkers.turn == 1) else 'R'))
+print("Player %s wins !" % ('R' if (checkers.turn == 1) else 'B'))
 
 
 
