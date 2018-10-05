@@ -58,7 +58,7 @@ class Checkers(object):
         move = [int(s) for s in input("What is your move? ").split(' ')]
         return self.movePiece(board, turn, move, isJump)
     
-    def movePiece(self, board, turn, move, isJump, human=True):
+    def movePiece(self, board, turn, move, isJump=False, human=True):
         print("move: %s" % move)        
         moveCheck = self.checkValidMove(board, turn, move, isJump)
 
@@ -67,7 +67,7 @@ class Checkers(object):
             board[move[0]][move[1]] = 0                            # and take piece out of old spot
             if moveCheck[1]: board [move[0]+(move[2]-move[0])//2]\
                                         [move[1]+(move[3]-move[1])//2] = 0   # if it was a jump, remove jumped piece
-            if moveCheck[2]: 
+            if False: # moveCheck[2]:    # removed for simplicity
                 print("You can make another move ! ")
                 self.printBoard(board)
                 self.getMove(board, turn, moveCheck[2])
@@ -83,7 +83,7 @@ class Checkers(object):
     # checks if the given move is valid to do
     # move -> the potential move
     # isJump -> if this move is right after a jump. If so, can only jump again (no single-steps)
-    def checkValidMove(self,board,turn,move,isJump):
+    def checkValidMove(self,board,turn,move,isJump=False):
         
         if ((move[0] < len(board)) & \
             (move[0] >= 0) & \
