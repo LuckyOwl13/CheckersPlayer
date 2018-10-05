@@ -8,7 +8,7 @@ from Checkers import Checkers
 from test.test_typechecks import Integer
 from tkinter.constants import CURRENT
 
-class Agent(object):
+class GameTree(object):
     
     checkers = Checkers()
     depth = 0
