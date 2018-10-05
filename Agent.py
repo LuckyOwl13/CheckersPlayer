@@ -130,9 +130,11 @@ class Agent(object):
 
 class Node:
     children = []
+    name = ""
     
-    def __init__(self,value):
-        self.value = value
+    def __init__(self,value,name):
+        self.value = value  # for Checkers, this is the board state
+        self.name = name    # for Checkers, this is the move
         
     def addChild(self,Node):
         self.children += Node
