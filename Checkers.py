@@ -17,6 +17,15 @@ class Checkers(object):
         '''
         Constructor
         '''
+
+#         self.board = [[' ',1,' ',1,' ',1,' ',1],
+#                       [1,' ',1,' ',1,' ',1,' '],
+#                       [' ',1,' ',1,' ',1,' ',1],
+#                       [0,' ',0,' ',0,' ',0,' '],
+#                       [' ',0,' ',0,' ',0,' ',0],
+#                       [0,' ',0,' ',0,' ',0,' '],
+#                       [' ',0,' ',0,' ',0,' ',0],
+#                       [0,' ',0,' ',-1,' ',0,' ']]
         self.board = [[' ',1,' ',1,' ',1,' ',1],
                       [1,' ',1,' ',1,' ',1,' '],
                       [' ',1,' ',1,' ',1,' ',1],
@@ -46,7 +55,6 @@ class Checkers(object):
                 
                 printString += letter + " "
             print(printString)
-        print("It is %s's turn" % self.whoseTurn())
     # end printBoard
     
     def whoseTurn(self):
@@ -56,10 +64,10 @@ class Checkers(object):
     
     def getMove(self,board,turn,isJump=False):
         move = [int(s) for s in input("What is your move? ").split(' ')]
+        print("move: %s" % move)   
         return self.movePiece(board, turn, move, isJump)
     
     def movePiece(self, board, turn, move, isJump=False, human=True):
-        print("move: %s" % move)   
         
         moveCheck = self.checkValidMove(board, turn, move, isJump)
 
@@ -157,7 +165,7 @@ class Checkers(object):
         for i in range(0,len(board)):           # for all vertical bars
             for j in range (0,len(board[i])):   # for all horizontal spaces in given vertical bar
                 if board[i][j] == player:       # if current space is the player's piece, check the following
-                    
+#                     print("board[%i][%i] {%s} == %s, so going forward" % (i, j, board[i][j], player))
                     if Checkers.checkValidMove(self, board, player, [i,j,i-1,j-1], False)[0]: # hop UL
                         moveSet += [[i,j,i-1,j-1]]
                     if Checkers.checkValidMove(self, board, player, [i,j,i-1,j+1], False)[0]: # hop UR
@@ -242,19 +250,20 @@ class Checkers(object):
 
 
 
-
-checkers = Checkers()
-
-
-while checkers.nextTurn():
-    checkers.printBoard(checkers.board)
-    checkers.board = checkers.getMove(checkers.board[:],checkers.turn,False)
-    checkers.anyKings()
-    print("~~~~~~~~~~~~~~~ Next Turn")
-# end while
-
-print("Player %s cannot make any moves !" % ('B' if (checkers.turn == 1) else 'R'))
-print("Player %s wins !" % ('R' if (checkers.turn == 1) else 'B'))
+if __name__ == "__main__":
+    checkers = Checkers()
+    
+    
+    while checkers.nextTurn():
+        checkers.printBoard(checkers.board)
+        print("It is %s's turn" % checkers.whoseTurn())
+        checkers.board = checkers.getMove(checkers.board[:],checkers.turn,False)
+        checkers.anyKings()
+        print("~~~~~~~~~~~~~~~ Next Turn")
+    # end while
+    
+    print("Player %s cannot make any moves !" % ('B' if (checkers.turn == 1) else 'R'))
+    print("Player %s wins !" % ('R' if (checkers.turn == 1) else 'B'))
 
 
 
