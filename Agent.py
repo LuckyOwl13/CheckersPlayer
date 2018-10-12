@@ -205,7 +205,8 @@ class AlphaBeta:
 
 if __name__ == "__main__":
     print("We're Agenting in here")
-        
+    
+    times = []
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     for i in range(1,11):
         checker = Checkers()
@@ -216,7 +217,7 @@ if __name__ == "__main__":
         start_time = time.time()
         gametree.root = gametree.fillTree(gametree.checkers.board, gametree.player, gametree.depth, [5,0,4,1])
         elapsed_time = time.time() - start_time
-        
+        times += [elapsed_time]
         print("done !")
     #     print(gametree.root)
     #     print(len(gametree.root.getChildren()))
@@ -261,7 +262,9 @@ if __name__ == "__main__":
 #     print("Again, took %s seconds" % (elapsed_time))
     
     
-    
+    print("All times:")
+    for i in range(0,len(times)):
+        print("Depth of %i => time of %s seconds (%s minutes)" % (i, times[i], (times[i]/60)))
     
     
     
