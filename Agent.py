@@ -264,7 +264,7 @@ if __name__ == "__main__":
     
     print("All times:")
     for i in range(0,len(times)):
-        print("Depth of %i => time of %s seconds (%s minutes)" % (i, times[i], (times[i]/60)))
+        print("\tDepth of %i => time of %s seconds (%s minutes)" % (i, times[i], (times[i]/60)))
     
     
     
