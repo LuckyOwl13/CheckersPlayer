@@ -3,7 +3,7 @@ Created on Sep 7, 2018
 
 @author: Caitlin ☼
 '''
-from distutils.command.check import check
+
 
 class Checkers(object):
     '''
@@ -18,14 +18,14 @@ class Checkers(object):
         Constructor
         '''
 
-#         self.board = [[' ',1,' ',1,' ',1,' ',1],
-#                       [1,' ',1,' ',1,' ',1,' '],
-#                       [' ',1,' ',1,' ',1,' ',1],
+#         self.board = [[' ',0,' ',0,' ',0,' ',1],
+#                       [1,' ',0,' ',0,' ',0,' '],
+#                       [' ',0,' ',0,' ',-1,' ',0],
+#                       [0,' ',0,' ',0,' ',0,' '],
+#                       [' ',0,' ',-1,' ',0,' ',0],
 #                       [0,' ',0,' ',0,' ',0,' '],
 #                       [' ',0,' ',0,' ',0,' ',0],
-#                       [0,' ',0,' ',0,' ',0,' '],
-#                       [' ',0,' ',0,' ',0,' ',0],
-#                       [0,' ',0,' ',-1,' ',0,' ']]
+#                       [0,' ',0,' ',0,' ',0,' ']]
         self.board = [[' ',1,' ',1,' ',1,' ',1],
                       [1,' ',1,' ',1,' ',1,' '],
                       [' ',1,' ',1,' ',1,' ',1],
@@ -81,9 +81,9 @@ class Checkers(object):
                 self.printBoard(board)
                 self.getMove(board, turn, moveCheck[2])
         elif not human: 
-            ["complain about it"]
+            input("AI made a bad move, somehow. It was: " + str(move))
         else:
-            print(moveCheck[3])
+            print("Printing moveCheck[3]: " + moveCheck[3])
             self.getMove(board, turn, False)   # if given a bad move, retry recursively
         # end else    
         return board
@@ -94,10 +94,6 @@ class Checkers(object):
     # move -> the potential move
     # isJump -> if this move is right after a jump. If so, can only jump again (no single-steps)
     def checkValidMove(self,board,turn,move,isJump=False):
-#         
-#         print("Checking move %s" % move)
-#         print(turn == board[move[0]][move[1]])
-#         
         
         if ( (move[0] < len(board)) and \
              (move[0] >= 0) and \
@@ -112,27 +108,22 @@ class Checkers(object):
                     (move[2] == move[0] + turn) and \
                     (abs(move[3] - move[1]) == 1) and \
                     (board[move[2]][move[3]] == 0)):    # if the piece is being moved one forward
-                    # print("only one hop")
                     return True, False, False
                 elif ((move[2] == move[0] + turn*2) and \
                       (abs(move[3] - move[1]) == 2) and \
                      ((board[move[0] + (move[2] - move[0])//2][move[1] + (move[3] - move[1])//2] == turn*(-1)) or \
                       (board[move[0] + (move[2] - move[0])//2][move[1] + (move[3] - move[1])//2] == turn*(-1)*self.king)) and \
                       (board[move[2]][move[3]] == 0)):    # elif the piece is jumping another piece (moving forward)
-                    # print("two hops this time !")
                     
                     if (self.checkMoreJumps(board,[move[2], move[3], board[move[0]][move[1]]])[0]): # if there are more jumps possible
-                        # print("Yes jumps!")
                         return True, True, True
                     else:
-                        # print("No jumps :(")
                         return True, True, False
                 elif ((not isJump) and \
                       (abs(board[move[0]][move[1]]) == self.king) and \
                       (move[2] == move[0] - turn) and \
                       (abs(move[3] - move[1]) == 1) and \
                       (board[move[2]][move[3]] == 0)):    # if the piece is being moved backward (if it is a king or already jumping)
-                    # print("King hops where it likes")
                     return True, False, False
                 elif (((abs(board[move[0]][move[1]]) == self.king) or isJump) and \
                        (move[2] == move[0] - turn*2) and \
@@ -252,7 +243,6 @@ class Checkers(object):
 
 if __name__ == "__main__":
     checkers = Checkers()
-    
     
     while checkers.nextTurn():
         checkers.printBoard(checkers.board)
