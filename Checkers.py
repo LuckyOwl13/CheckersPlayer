@@ -19,11 +19,11 @@ class Checkers(object):
         '''
 
 #         self.board = [[' ',0,' ',0,' ',0,' ',1],
-#                       [1,' ',0,' ',0,' ',0,' '],
-#                       [' ',0,' ',0,' ',-1,' ',0],
+#                       [0,' ',1,' ',0,' ',0,' '],
+#                       [' ',0,' ',0,' ',0,' ',0],
 #                       [0,' ',0,' ',0,' ',0,' '],
-#                       [' ',0,' ',-1,' ',0,' ',0],
-#                       [0,' ',0,' ',0,' ',0,' '],
+#                       [' ',1,' ',0,' ',0,' ',0],
+#                       [0,' ',-1,' ',0,' ',0,' '],
 #                       [' ',0,' ',0,' ',0,' ',0],
 #                       [0,' ',0,' ',0,' ',0,' ']]
         self.board = [[' ',1,' ',1,' ',1,' ',1],
@@ -81,9 +81,10 @@ class Checkers(object):
                 self.printBoard(board)
                 self.getMove(board, turn, moveCheck[2])
         elif not human: 
+            print("This is moveCheck[]: " + str(moveCheck))
             input("AI made a bad move, somehow. It was: " + str(move))
         else:
-            print("Printing moveCheck[3]: " + moveCheck[3])
+            print("Error: " + moveCheck[3])
             self.getMove(board, turn, False)   # if given a bad move, retry recursively
         # end else    
         return board
