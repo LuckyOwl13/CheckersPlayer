@@ -17,15 +17,6 @@ class Checkers(object):
         '''
         Constructor
         '''
-
-#         self.board = [[' ',0,' ',0,' ',0,' ',1],
-#                       [0,' ',1,' ',0,' ',0,' '],
-#                       [' ',0,' ',0,' ',0,' ',0],
-#                       [0,' ',0,' ',0,' ',0,' '],
-#                       [' ',1,' ',0,' ',0,' ',0],
-#                       [0,' ',-1,' ',0,' ',0,' '],
-#                       [' ',0,' ',0,' ',0,' ',0],
-#                       [0,' ',0,' ',0,' ',0,' ']]
         self.board = [[' ',1,' ',1,' ',1,' ',1],
                       [1,' ',1,' ',1,' ',1,' '],
                       [' ',1,' ',1,' ',1,' ',1],
@@ -34,6 +25,15 @@ class Checkers(object):
                       [-1,' ',-1,' ',-1,' ',-1,' '],
                       [' ',-1,' ',-1,' ',-1,' ',-1],
                       [-1,' ',-1,' ',-1,' ',-1,' ']]
+#         self.board = [[' ',0,' ',0,' ',0,' ',0],
+#                       [0,' ',0,' ',0,' ',0,' '],
+#                       [' ',0,' ',0,' ',2,' ',-1],
+#                       [0,' ',0,' ',0,' ',0,' '],
+#                       [' ',0,' ',0,' ',0,' ',0],
+#                       [0,' ',0,' ',0,' ',0,' '],
+#                       [' ',0,' ',0,' ',0,' ',0],
+#                       [0,' ',0,' ',0,' ',0,' ']]
+
         self.turn = 1
     # end init
         
@@ -130,9 +130,9 @@ class Checkers(object):
                        (move[2] == move[0] - turn*2) and \
                        (abs(move[3] - move[1]) == 2) and \
                       ((board[move[0] + (move[2] - move[0])//2][move[1] + (move[3] - move[1])//2] == turn*(-1)) or \
-                       (board[move[0] + (move[2] - move[0])//2][move[1] + (move[3] - move[1])//2] == turn*(-1))) and \
+                       (board[move[0] + (move[2] - move[0])//2][move[1] + (move[3] - move[1])//2] == self.king*turn*(-1))) and \
                        (board[move[2]][move[3]] == 0)): # if the piece is jumping another (moving backwards)
-                    # print("King power ! :D")
+#                     print("King power ! :D")
                     
                     if (self.checkMoreJumps(board,[move[2], move[3], board[move[0]][move[1]]])[0]): # if there are more jumps
                         # print("King Keeps Jumping !")
@@ -156,7 +156,7 @@ class Checkers(object):
         
         for i in range(0,len(board)):           # for all vertical bars
             for j in range (0,len(board[i])):   # for all horizontal spaces in given vertical bar
-                if board[i][j] == player:       # if current space is the player's piece, check the following
+                if board[i][j] == player or board[i][j] == self.king*player:       # if current space is the player's piece, check the following
 #                     print("board[%i][%i] {%s} == %s, so going forward" % (i, j, board[i][j], player))
                     if Checkers.checkValidMove(self, board, player, [i,j,i-1,j-1], False)[0]: # hop UL
                         moveSet += [[i,j,i-1,j-1]]
@@ -174,6 +174,15 @@ class Checkers(object):
                         moveSet += [[i,j,i+2,j-2]]
                     if Checkers.checkValidMove(self, board, player, [i,j,i+2,j+2], isJump)[0]: # jump DR
                         moveSet += [[i,j,i+2,j+2]]
+#                     if Checkers.checkValidMove(self, board, player, [i,j,i+2,j+2], isJump)[0]: # King hop reverse
+#                         moveSet += [[i,j,i+2,j+2]]
+#                     if Checkers.checkValidMove(self, board, player, [i,j,i+2,j+2], isJump)[0]: # King hop reverseL
+#                         moveSet += [[i,j,i+2,j+2]]
+#                     if Checkers.checkValidMove(self, board, player, [i,j,i+2,j+2], isJump)[0]: # jump DR
+#                         moveSet += [[i,j,i+2,j+2]]
+#                     if Checkers.checkValidMove(self, board, player, [i,j,i+2,j+2], isJump)[0]: # jump DR
+#                         moveSet += [[i,j,i+2,j+2]]
+                    
         
         return moveSet
     # end movesAvailable    
