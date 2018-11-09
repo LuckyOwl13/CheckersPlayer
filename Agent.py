@@ -213,16 +213,18 @@ class AlphaBeta:
 if __name__ == "__main__":
     print("We're Agenting in here")
     
-    depth = 1
-    blackDepth = 2
-    redDepth = 2
+    filePath = "MoveSets/"
+    saveString = ""
+    
+    redMaxDepth = 6     # deepest Red will go
+    blackMaxDepth = 6   # deepest Black will go
     turnMax = 100   # max # of turns
     
-    gameMax = 1
+    gameMax = 5
     print('Will play %i games' % gameMax)
-    for redDepth in range(1,7):         # with this deep a red AI
-        for blackDepth in range(1,7):   # and  this deep a black AI 
-            for x in range(0,gameMax):  # play this many games
+    for redDepth in range(1,redMaxDepth+1):         # with this deep a red AI
+        for blackDepth in range(1,blackMaxDepth+1):   # and  this deep a black AI 
+            for gameNum in range(1,gameMax+1):  # play this many games
                 
                 checkers = Checkers()
 #                 checkers.nextTurn()    # uncomment for Black to go firsts
@@ -261,7 +263,9 @@ if __name__ == "__main__":
                         concede = True
                     else:
                         checkers.board = checkers.movePiece(copy.deepcopy(checkers.board), checkers.turn, best_move.name, False, False)  # Make that move
-                              
+                        
+                        saveString += str(best_move.name) + "\n"
+                        
                         checkers.anyKings()
                         counter += 1
                         print("~~~~~~~~~~~~~~~ Next Turn (#%s)" % counter)  # signal it is the AI's turn
@@ -280,10 +284,13 @@ if __name__ == "__main__":
                     print("Player %s cannot make any moves !" % ('B' if (checkers.turn == 1) else 'R'))
                 
                 
-                
-                print("Player %s wins !" % ('R' if (checkers.turn == 1) else 'B'))
+                winner = 'R' if (checkers.turn == 1) else 'B'
+                print("Player %s wins !" % winner)
+                saveString += winner
      
-     
+                file = open(filePath + "gameR%iB%iG%i.txt" % (redDepth,blackDepth,gameNum), "w")  # create or overwrite a file 
+                file.write(saveString)  # write saveString to file
+
      
      
      
