@@ -5,13 +5,10 @@ Created on Sep 26, 2018
 '''
 
 from Checkers import Checkers
-from test.test_typechecks import Integer
-from tkinter.constants import CURRENT
 import time
 import copy
 import random
 from test.test_binop import isint
-from random import randint
 
 class TreeGenerator(object):
     
@@ -216,16 +213,16 @@ if __name__ == "__main__":
     filePath = "MoveSets/"
     saveString = ""
     
-    redMaxDepth = 6     # deepest Red will go
-    blackMaxDepth = 6   # deepest Black will go
+    redMaxDepth = 8     # deepest Red will go
+    blackMaxDepth = 8   # deepest Black will go
     turnMax = 100   # max # of turns
     
-    gameMax = 5
+    gameMax = 10
     print('Will play %i games' % gameMax)
     for redDepth in range(1,redMaxDepth+1):         # with this deep a red AI
         for blackDepth in range(1,blackMaxDepth+1):   # and  this deep a black AI 
             for gameNum in range(1,gameMax+1):  # play this many games
-                
+                saveString = ""     # clear out saveString
                 checkers = Checkers()
 #                 checkers.nextTurn()    # uncomment for Black to go firsts
                 
@@ -286,10 +283,9 @@ if __name__ == "__main__":
                 
                 winner = 'R' if (checkers.turn == 1) else 'B'
                 print("Player %s wins !" % winner)
-                saveString += winner
      
                 file = open(filePath + "gameR%iB%iG%i.txt" % (redDepth,blackDepth,gameNum), "w")  # create or overwrite a file 
-                file.write(saveString)  # write saveString to file
+                file.write(winner + "\n" + saveString)  # write saveString to file
 
      
      
