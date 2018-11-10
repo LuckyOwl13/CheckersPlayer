@@ -233,8 +233,9 @@ if __name__ == "__main__":
     gameMax = 10
     print('Will play %i games per match' % gameMax)
     for gameNum in range(1,gameMax+1):  # play this many games
-        for redDepth in range(1,redMaxDepth+1):         # with this deep a red AI
+        for redDepth in range(redMaxDepth+1,1,-1):         # with this deep a red AI
             for blackDepth in range(1,blackMaxDepth+1):   # and  this deep a black AI 
+                print("Game %s red %i black %i . . . " % ('{:02d}'.format(gameNum),redDepth,blackDepth),end = '')
                 with HiddenPrints():
                     saveString = ""     # clear out saveString
                     checkers = Checkers()
@@ -301,7 +302,7 @@ if __name__ == "__main__":
                     file = open(filePath + "gameR%iB%iG%i.txt" % (redDepth,blackDepth,gameNum), "w")  # create or overwrite a file 
                     file.write(winner + "\n" + saveString)  # write saveString to file
                 # end with HiddenPrints()
-                print("Finished game %s red %i black %i" % ('{:02d}'.format(gameNum),redDepth,blackDepth))
+                print(" Done")
      
      
      
