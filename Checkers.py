@@ -25,7 +25,7 @@ class Checkers(object):
                       [-1,' ',-1,' ',-1,' ',-1,' '],
                       [' ',-1,' ',-1,' ',-1,' ',-1],
                       [-1,' ',-1,' ',-1,' ',-1,' ']]
-#         self.board = [[' ',0,' ',0,' ',0,' ',0],
+#         self.board = [[' ',0,' ',0,' ',0,' ',0],    # uncomment to use modified board, such as for testing
 #                       [0,' ',0,' ',-1,' ',-2,' '],
 #                       [' ',0,' ',0,' ',0,' ',0],
 #                       [0,' ',2,' ',0,' ',0,' '],
@@ -82,7 +82,8 @@ class Checkers(object):
                 self.getMove(board, turn, moveCheck[2])
         elif not human: 
             print("This is moveCheck[]: " + str(moveCheck))
-            input("AI made a bad move, somehow. It was: " + str(move))
+            print("AI made a bad move, somehow. It was: " + str(move))
+            
         else:
             print("Error: " + moveCheck[3])
             self.getMove(board, turn, False)   # if given a bad move, retry recursively
@@ -104,12 +105,13 @@ class Checkers(object):
              (move[2] >= 0) and \
              (move[3] < len(board[move[2]])) and \
              (move[3] >= 0) ):  # if the piece selected and potential move are within bounds 
-            if ((turn == board[move[0]][move[1]]) or (turn*self.king == board[move[0]][move[1]])):   # if the (normal or king) piece matches the turn
+            if ((turn == board[move[0]][move[1]]) or \
+                (turn*self.king == board[move[0]][move[1]])):   # if the (normal or king) piece matches the turn
                 if ((not isJump) and \
                     (move[2] == move[0] + turn) and \
                     (abs(move[3] - move[1]) == 1) and \
                     (board[move[2]][move[3]] == 0)):    # if the piece is being moved one forward
-                    return True, False, False
+                        return True, False, False
                 elif ((move[2] == move[0] + turn*2) and \
                       (abs(move[3] - move[1]) == 2) and \
                      ((board[move[0] + (move[2] - move[0])//2][move[1] + (move[3] - move[1])//2] == turn*(-1)) or \
@@ -134,11 +136,11 @@ class Checkers(object):
                        (board[move[2]][move[3]] == 0)): # if the piece is jumping another (moving backwards)
 #                     print("King power ! :D")
                     
-                    if (self.checkMoreJumps(board,[move[2], move[3], board[move[0]][move[1]]])[0]): # if there are more jumps
-                        # print("King Keeps Jumping !")
-                        return True, True, True
-                    else:
-                        return True, True, False 
+#                     if (self.checkMoreJumps(board,[move[2], move[3], board[move[0]][move[1]]])[0]): # if there are more jumps
+#                         # print("King Keeps Jumping !")
+#                         return True, True, True
+#                     else:
+                    return True, True, False 
                 else: 
                     return False, False, False, "Invalid move, bad coords"
             else: 
@@ -239,12 +241,12 @@ class Checkers(object):
     def anyKings(self):
         for i in {1, 3, 5, 7}:
             if self.board[0][i] == -1:
-                print("King me !")
+#                 print("King me !")
                 self.board[0][i] *= self.king
         
         for i in {0, 2, 4, 6}:
             if self.board[7][i] == 1:
-                print("King me !")
+#                 print("King me !")
                 self.board[7][i] *= self.king
     # end anyKings
 # end Class
@@ -253,7 +255,7 @@ class Checkers(object):
 
 if __name__ == "__main__":
     checkers = Checkers()
-    checkers.nextTurn()     # uncomment for black to go first
+#     checkers.nextTurn()     # uncomment for black to go first
     
     while checkers.nextTurn():
         checkers.printBoard(checkers.board)
