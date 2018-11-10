@@ -9,6 +9,19 @@ import time
 import copy
 import random
 from test.test_binop import isint
+import os, sys
+
+# Nabbed the following from: https://stackoverflow.com/questions/8391411/suppress-calls-to-print-python
+class HiddenPrints:
+    def __enter__(self):
+        self._original_stdout = sys.stdout
+        sys.stdout = open(os.devnull, 'w')
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        sys.stdout.close()
+        sys.stdout = self._original_stdout
+        
+# end of nabbing
 
 class TreeGenerator(object):
     
@@ -218,75 +231,77 @@ if __name__ == "__main__":
     turnMax = 100   # max # of turns
     
     gameMax = 10
-    print('Will play %i games' % gameMax)
-    for redDepth in range(1,redMaxDepth+1):         # with this deep a red AI
-        for blackDepth in range(1,blackMaxDepth+1):   # and  this deep a black AI 
-            for gameNum in range(1,gameMax+1):  # play this many games
-                saveString = ""     # clear out saveString
-                checkers = Checkers()
-#                 checkers.nextTurn()    # uncomment for Black to go firsts
-                
-            # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-                print("\n\n\n")
-                print("AI will play full game of up to " + str(turnMax) + " moves")
-                print("Red depth = %i, Black depth = %i" % (redDepth,blackDepth))
-                red = AlphaBeta(redDepth,-1)
-                black = AlphaBeta(blackDepth,1)
-                
-                counter = 0     # counter for turns taken
-                concede = False # flag for an AI concedes
-                while checkers.nextTurn() and not concede and counter < turnMax:
-                    checkers.printBoard(checkers.board)
-                    player = checkers.whoseTurn()
-                    print("It is %s's turn" % player)
-                    if player == "R":
-                        depth = redDepth
-                    else:
-                        depth = blackDepth
-                        
-                    start_time = time.time()
-                    treeGen = TreeGenerator(copy.deepcopy(checkers), checkers.turn,depth)
-                    tree = treeGen.getTree(copy.deepcopy(checkers.board))
-                    print("~~~~~~~~ Time to generate potential moves: " + str(time.time() - start_time))
-                    start_time = time.time()
-                    best_move = None
-                    if player == "R":
-                        best_move = red.alpha_beta_search(tree)    # Find best move, save it as best_move
-                    else:
-                        best_move = black.alpha_beta_search(tree)    # Find best move, save it as best_move
-                    print("~~~~~~~~ Time to ABP through said tree: " + str(time.time() - start_time))
-                    print(str(best_move))
-                    if (best_move.name == [-1,-1,-1,-1]):
-                        concede = True
-                    else:
-                        checkers.board = checkers.movePiece(copy.deepcopy(checkers.board), checkers.turn, best_move.name, False, False)  # Make that move
-                        
-                        saveString += str(best_move.name) + "\n"
-                        
-                        checkers.anyKings()
-                        counter += 1
-                        print("~~~~~~~~~~~~~~~ Next Turn (#%s)" % counter)  # signal it is the AI's turn
+    print('Will play %i games per match' % gameMax)
+    for gameNum in range(1,gameMax+1):  # play this many games
+        for redDepth in range(1,redMaxDepth+1):         # with this deep a red AI
+            for blackDepth in range(1,blackMaxDepth+1):   # and  this deep a black AI 
+                with HiddenPrints():
+                    saveString = ""     # clear out saveString
+                    checkers = Checkers()
+    #                 checkers.nextTurn()    # uncomment for Black to go firsts
                     
-                # end while     
-                
-                if concede:
-                    checkers.turn = checkers.turn*(-1)  
-                    print("Player %s has conceded !" %
-                                (('B' if (checkers.turn == 1) else 'R')))
-                elif counter >= turnMax: # if max # of turns reached
-                    print("No more moves allowed!")
-                    print("Player %s has the better board !" %   
-                            ('R' if (red.scoreNode(checkers.board) > black.scoreNode(checkers.board)) else 'B'))
-                else:   # if the game ended normally
-                    print("Player %s cannot make any moves !" % ('B' if (checkers.turn == 1) else 'R'))
-                
-                
-                winner = 'R' if (checkers.turn == 1) else 'B'
-                print("Player %s wins !" % winner)
-     
-                file = open(filePath + "gameR%iB%iG%i.txt" % (redDepth,blackDepth,gameNum), "w")  # create or overwrite a file 
-                file.write(winner + "\n" + saveString)  # write saveString to file
-
+                # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+                    print("\n\n\n")
+                    print("AI will play full game of up to " + str(turnMax) + " moves")
+                    print("Red depth = %i, Black depth = %i" % (redDepth,blackDepth))
+                    red = AlphaBeta(redDepth,-1)
+                    black = AlphaBeta(blackDepth,1)
+                    
+                    counter = 0     # counter for turns taken
+                    concede = False # flag for an AI concedes
+                    while checkers.nextTurn() and not concede and counter < turnMax:
+                        checkers.printBoard(checkers.board)
+                        player = checkers.whoseTurn()
+                        print("It is %s's turn" % player)
+                        if player == "R":
+                            depth = redDepth
+                        else:
+                            depth = blackDepth
+                            
+                        start_time = time.time()
+                        treeGen = TreeGenerator(copy.deepcopy(checkers), checkers.turn,depth)
+                        tree = treeGen.getTree(copy.deepcopy(checkers.board))
+                        print("~~~~~~~~ Time to generate potential moves: " + str(time.time() - start_time))
+                        start_time = time.time()
+                        best_move = None
+                        if player == "R":
+                            best_move = red.alpha_beta_search(tree)    # Find best move, save it as best_move
+                        else:
+                            best_move = black.alpha_beta_search(tree)    # Find best move, save it as best_move
+                        print("~~~~~~~~ Time to ABP through said tree: " + str(time.time() - start_time))
+                        print(str(best_move))
+                        if (best_move.name == [-1,-1,-1,-1]):
+                            concede = True
+                        else:
+                            checkers.board = checkers.movePiece(copy.deepcopy(checkers.board), checkers.turn, best_move.name, False, False)  # Make that move
+                            
+                            saveString += str(best_move.name) + "\n"
+                            
+                            checkers.anyKings()
+                            counter += 1
+                            print("~~~~~~~~~~~~~~~ Next Turn (#%s)" % counter)  # signal it is the AI's turn
+                        
+                    # end while     
+                    
+                    if concede:
+                        checkers.turn = checkers.turn*(-1)  
+                        print("Player %s has conceded !" %
+                                    (('B' if (checkers.turn == 1) else 'R')))
+                    elif counter >= turnMax: # if max # of turns reached
+                        print("No more moves allowed!")
+                        print("Player %s has the better board !" %   
+                                ('R' if (red.scoreNode(checkers.board) > black.scoreNode(checkers.board)) else 'B'))
+                    else:   # if the game ended normally
+                        print("Player %s cannot make any moves !" % ('B' if (checkers.turn == 1) else 'R'))
+                    
+                    
+                    winner = 'R' if (checkers.turn == 1) else 'B'
+                    print("Player %s wins !" % winner)
+         
+                    file = open(filePath + "gameR%iB%iG%i.txt" % (redDepth,blackDepth,gameNum), "w")  # create or overwrite a file 
+                    file.write(winner + "\n" + saveString)  # write saveString to file
+                # end with HiddenPrints()
+                print("Finished game %s red %i black %i" % ('{:02d}'.format(gameNum),redDepth,blackDepth))
      
      
      
@@ -346,28 +361,6 @@ if __name__ == "__main__":
     
     
 # end FILE    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     
     
