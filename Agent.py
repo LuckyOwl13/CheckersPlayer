@@ -221,6 +221,8 @@ class AlphaBeta:
 
 
 if __name__ == "__main__":
+    startTime = 0
+    endTime = 0
     print("We're Agenting in here")
     
     filePath = "MoveSets/"
@@ -230,12 +232,14 @@ if __name__ == "__main__":
     blackMaxDepth = 8   # deepest Black will go
     turnMax = 100   # max # of turns
     
-    gameMax = 10
+    gameMax = 40
     print('Will play %i games per match' % gameMax)
     for gameNum in range(1,gameMax+1):  # play this many games
-        for redDepth in range(redMaxDepth+1,1,-1):         # with this deep a red AI
-            for blackDepth in range(1,blackMaxDepth+1):   # and  this deep a black AI 
+        for redDepth in range(1,redMaxDepth+1):         # with this deep a red AI
+            for blackDepth in range(6,blackMaxDepth+1):   # and  this deep a black AI 
                 print("Game %s red %i black %i . . . " % ('{:02d}'.format(gameNum),redDepth,blackDepth),end = '')
+                redScore = -999999
+                blackScore = -999999
                 with HiddenPrints():
                     saveString = ""     # clear out saveString
                     checkers = Checkers()
@@ -250,6 +254,7 @@ if __name__ == "__main__":
                     
                     counter = 0     # counter for turns taken
                     concede = False # flag for an AI concedes
+                    startTime = time.time()
                     while checkers.nextTurn() and not concede and counter < turnMax:
                         checkers.printBoard(checkers.board)
                         player = checkers.whoseTurn()
@@ -285,24 +290,29 @@ if __name__ == "__main__":
                     # end while     
                     
                     if concede:
-                        checkers.turn = checkers.turn*(-1)  
                         print("Player %s has conceded !" %
-                                    (('B' if (checkers.turn == 1) else 'R')))
+                                    (('B' if (checkers.turn == -1) else 'R')))
+                        winner = 'B' if (checkers.turn == 1) else 'R'
                     elif counter >= turnMax: # if max # of turns reached
                         print("No more moves allowed!")
-                        print("Player %s has the better board !" %   
-                                ('R' if (red.scoreNode(checkers.board) > black.scoreNode(checkers.board)) else 'B'))
+                        redScore = red.scoreNode(checkers.board)
+                        blackScore = black.scoreNode(checkers.board)
+                        winner = 'R' if (redScore >= blackScore) else 'B'
+                        print("Player %s has the better board !" % winner)
                     else:   # if the game ended normally
                         print("Player %s cannot make any moves !" % ('B' if (checkers.turn == 1) else 'R'))
-                    
-                    
-                    winner = 'R' if (checkers.turn == 1) else 'B'
+                        winner = 'R' if (checkers.turn == 1) else 'B'
+
+
                     print("Player %s wins !" % winner)
-         
-                    file = open(filePath + "gameR%iB%iG%i.txt" % (redDepth,blackDepth,gameNum), "w")  # create or overwrite a file 
+                    endTime = time.time() - startTime
+                    file = open(filePath + "gameR%iB%iG%i-5540.txt" % (redDepth,blackDepth,gameNum), "w")  # create or overwrite a file 
                     file.write(winner + "\n" + saveString)  # write saveString to file
+                    file.close()
                 # end with HiddenPrints()
-                print(" Done")
+                print(" Done in %s minutes (%s)" % ('{:00.3f}'.format(endTime/60),winner))
+                print("Final scores: R = %i, B = %i" % (redScore, blackScore))
+                checkers.printBoard(checkers.board)
      
      
      
