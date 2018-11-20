@@ -148,15 +148,15 @@ class AlphaBeta:
             elif value > best_val:  # else if this node is better than current nodes
                 best_val = value        # wipe the slate
                 best_states = [state]
-#         print ("AlphaBeta:  Utility Value of Root Node: = " + str(best_val))
-#         print ("AlphaBeta:  Best State is: " + str(best_state.name))
+		#         print ("AlphaBeta:  Utility Value of Root Node: = " + str(best_val))
+		#         print ("AlphaBeta:  Best State is: " + str(best_state.name))
         if best_states == None:  # if there were no possible states (e.g loses)
             return Node([-1,-1,-1,-1],[])
         else:
             return best_states[random.randint(0,len(best_states)-1)]  # returns a random node of equally best value
 
     def max_value(self, node, alpha, beta, depth):
-#         print ("AlphaBeta-->MAX: Visited Node :: " + str(node.name))
+		#         print ("AlphaBeta-->MAX: Visited Node :: " + str(node.name))
         if depth == 1:
             return self.getUtility(node)
         value = -self.infinity
@@ -171,7 +171,7 @@ class AlphaBeta:
         return value
 
     def min_value(self, node, alpha, beta, depth):
-#         print ("AlphaBeta-->MIN: Visited Node :: " + str(node.name))
+		#         print ("AlphaBeta-->MIN: Visited Node :: " + str(node.name))
         if depth == 1:
             return self.getUtility(node)
         value = self.infinity
@@ -228,15 +228,15 @@ if __name__ == "__main__":
     filePath = "MoveSets/"
     saveString = ""
     
-    redMaxDepth = 8     # deepest Red will go
-    blackMaxDepth = 8   # deepest Black will go
+    redMaxDepth = 10     # deepest Red will go
+    blackMaxDepth = 5   # deepest Black will go
     turnMax = 100   # max # of turns
     
-    gameMax = 40
+    gameMax = 10
     print('Will play %i games per match' % gameMax)
     for gameNum in range(1,gameMax+1):  # play this many games
-        for redDepth in range(1,redMaxDepth+1):         # with this deep a red AI
-            for blackDepth in range(6,blackMaxDepth+1):   # and  this deep a black AI 
+        for redDepth in range(6,redMaxDepth+1):         # with this deep a red AI
+            for blackDepth in range(1,blackMaxDepth+1):   # and  this deep a black AI 
                 print("Game %s red %i black %i . . . " % ('{:02d}'.format(gameNum),redDepth,blackDepth),end = '')
                 redScore = -999999
                 blackScore = -999999
