@@ -202,7 +202,8 @@ class AlphaBeta:
 
     def getUtility(self, node):
         assert node is not None
-        return self.scoreNode(Checkers.movePiece(checkers, node.value, self.player*((-1)**(self.depth+1)), node.name, False, False))
+        return self.scoreNode(Checkers.movePiece(checkers, \
+        	node.value, self.player*((-1)**(self.depth+1)), node.name, False, False))
     
     def scoreNode(self, board):
         score = 0
@@ -228,14 +229,14 @@ if __name__ == "__main__":
     filePath = "MoveSets/"
     saveString = ""
     
-    redMaxDepth = 10     # deepest Red will go
+    redMaxDepth = 5     # deepest Red will go
     blackMaxDepth = 5   # deepest Black will go
     turnMax = 100   # max # of turns
     
-    gameMax = 10
+    gameMax = 100
     print('Will play %i games per match' % gameMax)
-    for gameNum in range(1,gameMax+1):  # play this many games
-        for redDepth in range(6,redMaxDepth+1):         # with this deep a red AI
+    for gameNum in range(97,gameMax+1):  # play this many games
+        for redDepth in range(1,redMaxDepth+1):         # with this deep a red AI
             for blackDepth in range(1,blackMaxDepth+1):   # and  this deep a black AI 
                 print("Game %s red %i black %i . . . " % ('{:02d}'.format(gameNum),redDepth,blackDepth),end = '')
                 redScore = -999999
